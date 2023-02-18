@@ -1,14 +1,15 @@
-
-
 // lets create a function get menu
-var Myobject=[];
+
+var Myobject = [];
+
+// displaying the food from api
 function getMenu() {
- fetch('https://free-food-menus-api-production.up.railway.app/burgers')
+    return new Promise((resolve, reject) => {
+    fetch('https://free-food-menus-api-production.up.railway.app/burgers')
       .then(response => response.json())
       .then(data => {
         // console.log(data);
-        
-        
+        Myobject = data;
 
         let displayMenu = document.getElementById('menu')
         const menuItems = data.map(item => `
@@ -22,64 +23,75 @@ function getMenu() {
           </div>
         `)
         displayMenu.innerHTML = menuItems;
-        return Myobject = data
+
+       resolve(Myobject)
     })
-  }
-//   console.log(Myobject)
-function takeOrder(){
+  })
+}
+
+//   the random three burger stored in object ->>>>>>>>>>>>>>>>
+  
+function takeOrder(data){
     // console.log(data);
+    let emptyObject = {}
+    for(let i=0;i<3;i++){
+        let randomIndex = Math.floor(Math.random() * data.length)
+        emptyObject[`value${i}`] = data[randomIndex]
+    }
+    // the three random burger are consoled here ->>>>>>>>>>>>>
+    
     return new Promise((resolve, reject) => {
        setTimeout(()=>{
-        resolve({
-          
-        })
+        console.log(emptyObject)
+        resolve(emptyObject)
        },2500)
     }) 
 }
+
+// function 2 order has been place payment is left
 function orderPrep(){
-    // const status = {'paymentStatus','orderStatus'}
+    // var status = {'paymentStatus','orderStatus'}
     return new Promise((resolve, reject) => {
         setTimeout(()=>{
-            resolve(
-             
-            )
+            console.log({order_status:true, paid:false});
+            resolve({order_status:true, paid:false})
         },1500)
     })
 }
-function payOrder(status){
-  
+
+// function 3 payment 
+function payOrder(){
     return new Promise((resolve, reject) => {
         setTimeout(()=>{
+            console.log({order_status:true, paid:true});
             resolve(
-                //  {
-                //     paid:true,
-                //     orderStatus:true
-                //    }
+                 {
+                    paid:true,
+                    orderStatus:true
+                   }
               
             )
         },1000)
     })
 }
+// function 4 success
 function thankYouFunc(){
     return new Promise((resolve, reject) => {
         resolve(alert('thank you'))
     })
 }
 // fetching the data by calling getMenu function
+
+// promise chaining is going on 
 getMenu()
-
-
-// promise chaining
-takeOrder()
-.then((data2) =>{
-    orderPrep(data2);})
-.then((data3) =>{
-    payOrder(data3);})
-.then((data3) =>{
-    thankYouFunc(data3);})
-.catch((e)=>{
+.then((data1) =>
+    takeOrder(data1))
+.then(() =>
+    orderPrep())
+.then(() =>
+    payOrder())
+.then(() =>
+    thankYouFunc())
+.catch((e)=>
     console.log('error',e)
-})
-
-
-
+)
